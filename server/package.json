@@ -1,0 +1,20 @@
+{
+  "name": "rentredi-user-management-server",
+  "version": "1.0.0",
+  "description": "CRUD API for the RentRedi user-management take-home.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon --exec \"node --env-file=../.env\" src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "firebase-admin": "^12.7.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

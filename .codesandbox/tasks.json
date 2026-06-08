@@ -1,0 +1,31 @@
+{
+  "$schema": "https://codesandbox.io/schemas/tasks.json",
+  "setupTasks": [
+    {
+      "name": "Install server dependencies",
+      "command": "cd server && npm install"
+    },
+    {
+      "name": "Install client dependencies",
+      "command": "cd client && npm install"
+    }
+  ],
+  "tasks": {
+    "server": {
+      "name": "Server (8080)",
+      "command": "cd server && npm start",
+      "runAtStart": true,
+      "preview": {
+        "port": 8080
+      }
+    },
+    "client": {
+      "name": "Client (3000)",
+      "command": "cd client && npm run dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 3000
+      }
+    }
+  }
+}
