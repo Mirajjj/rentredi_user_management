@@ -1,3 +1,18 @@
+# dependencies
 node_modules
+
+# build output
+dist
+.vite
+
+# secrets & local env (the real .env is never committed)
+.env
 *.env
+
+# internal working docs — planning notes and the brief (which holds the API key);
+# these stay out of the repo the reviewer sees.
 *.md
+plans/
+
+#deliverable docs, which are tracked.
+!README.md

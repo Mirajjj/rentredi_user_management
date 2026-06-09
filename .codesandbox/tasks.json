@@ -1,0 +1,31 @@
+{
+  "$schema": "https://codesandbox.io/schemas/tasks.json",
+  "setupTasks": [
+    {
+      "name": "Install server dependencies",
+      "command": "cd server && yarn install"
+    },
+    {
+      "name": "Install client dependencies",
+      "command": "cd client && yarn install"
+    }
+  ],
+  "tasks": {
+    "server": {
+      "name": "Server (8080)",
+      "command": "cd server && yarn start",
+      "runAtStart": true,
+      "preview": {
+        "port": 8080
+      }
+    },
+    "client": {
+      "name": "Client (3000)",
+      "command": "cd client && yarn dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 3000
+      }
+    }
+  }
+}
