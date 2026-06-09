@@ -8,7 +8,10 @@ import axios from "axios";
  * @returns {import('axios').AxiosInstance}
  */
 export const createHttp = () => {
-  const http = axios.create({ baseURL: import.meta.env.VITE_API_URL });
+  // Default to the relative `/api` path, which the Vite dev server proxies to
+  // the API (see vite.config.js) — same-origin, so no CORS or cross-subdomain
+  // URL. `VITE_API_URL` stays an optional override (e.g. to hit a remote API).
+  const http = axios.create({ baseURL: import.meta.env.VITE_API_URL ?? "/api" });
 
   // Surface the server's error body ({ error, details }) as the thrown error so
   // callers — and React Query — see a meaningful message instead of "Request
