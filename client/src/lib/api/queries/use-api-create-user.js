@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { client } from "@lib/api/client";
-import { routes } from "@lib/api/routes";
+import { api } from "@lib/api";
 import { userKeys } from "@lib/api/queries/keys";
 
 /**
@@ -12,10 +11,7 @@ import { userKeys } from "@lib/api/queries/keys";
 export function useAPICreateUser() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input) => {
-      const { data } = await client.post(routes.users.create(), input);
-      return data;
-    },
+    mutationFn: (input) => api.createUser(input),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: userKeys.all }),
   });
 }

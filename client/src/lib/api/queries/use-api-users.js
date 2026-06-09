@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { client } from "@lib/api/client";
-import { routes } from "@lib/api/routes";
+import { api } from "@lib/api";
 import { userKeys } from "@lib/api/queries/keys";
 
 /**
@@ -11,9 +10,6 @@ import { userKeys } from "@lib/api/queries/keys";
 export function useAPIUsers() {
   return useQuery({
     queryKey: userKeys.all,
-    queryFn: async () => {
-      const { data } = await client.get(routes.users.list());
-      return data;
-    },
+    queryFn: () => api.getUsers(),
   });
 }

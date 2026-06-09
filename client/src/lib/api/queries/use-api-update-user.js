@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { client } from "@lib/api/client";
-import { routes } from "@lib/api/routes";
+import { api } from "@lib/api";
 import { userKeys } from "@lib/api/queries/keys";
 
 /**
@@ -12,10 +11,7 @@ import { userKeys } from "@lib/api/queries/keys";
 export function useAPIUpdateUser() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, fields }) => {
-      const { data } = await client.put(routes.users.update(id), fields);
-      return data;
-    },
+    mutationFn: ({ id, fields }) => api.updateUser(id, fields),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: userKeys.all }),
   });
 }
