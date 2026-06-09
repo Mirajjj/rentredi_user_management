@@ -7,6 +7,10 @@ import { errorHandler } from "./middleware/errors.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Behind the CodeSandbox proxy: trust one hop so req.ip is the real client IP
+// (used for per-IP rate limiting), without trusting a spoofable X-Forwarded-For.
+app.set("trust proxy", 1);
+
 app.use(cors());
 app.use(express.json());
 app.use(requestLogger);

@@ -13,8 +13,9 @@ React + Vite (3000)  →  Express API (8080)  →  Firebase RTDB
 - **Server** — Express (Node 20). Five REST endpoints for users (create, list,
   get, update, delete). Input is validated with Zod. Creating a user looks up the
   zip on OpenWeather to get lat/lon/timezone; updating re-looks-up only when the
-  zip actually changes. One central error handler turns everything into clean
-  JSON responses.
+  zip actually changes. The two geo-deriving routes (create, update) are
+  rate-limited per IP, since each lookup costs an upstream API call. One central
+  error handler turns everything into clean JSON responses.
 - **Client** — React + Chakra UI. List of users as a table or cards, an add
   dialog, and a detail drawer. Data fetching/caching is TanStack Query. As a
   creative touch each user is plotted on a US map and the drawer shows their
@@ -55,7 +56,3 @@ cd client && yarn install && yarn dev      # client on :3000
 On CodeSandbox both start automatically and the env vars are set in the platform
 instead of a file.
 
-## What I'd add for production
-
-Rate limiting on the create endpoint (each geo lookup costs money), auth, a
-tighter CORS allowlist, and tests against the Firebase emulator.

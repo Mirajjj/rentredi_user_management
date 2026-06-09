@@ -6,6 +6,7 @@ import {
 } from "../schemas/routes/user-schema.js";
 import { geocodeZip } from "../services/geo.js";
 import { HttpError } from "../middleware/errors.js";
+import { writeLimiter } from "../middleware/rate-limit.js";
 import { db } from "../db/index.js";
 
 /**
@@ -23,6 +24,7 @@ const router = Router();
 // POST /users — derive geo from the zip, then persist.
 router.post(
   "/",
+  writeLimiter,
   asyncHandler(async (req, res) => {
     const { name, zipCode } = createUserSchema.parse(req.body);
     const geo = await geocodeZip(zipCode);
@@ -52,6 +54,7 @@ router.get(
 // PUT /users/:id — re-derive geo only when the zip actually changes.
 router.put(
   "/:id",
+  writeLimiter,
   asyncHandler(async (req, res) => {
     const changes = updateUserSchema.parse(req.body);
 
