@@ -2,24 +2,13 @@ import { Badge, Box, Flex, Stack, Table, Text } from "@chakra-ui/react";
 import { ChevronRight, Clock, Compass } from "lucide-react";
 
 import { Avatar } from "@base/index";
+import { HEAD } from "@modules/users/UserTable/constants";
 import { useUsersContext } from "@modules/users/context";
-import { cityState, tzChip } from "@modules/users/format";
+import { cityState, tzChip } from "@/modules/users/utils";
 
 /**
  * @typedef {import('@lib/api/types').User} User
  */
-
-const HEAD = {
-  textAlign: "left",
-  fontWeight: "600",
-  fontSize: "11px",
-  textTransform: "uppercase",
-  letterSpacing: "0.05em",
-  color: "fg.subtle",
-  bg: "bg.subtle",
-  borderColor: "border.subtle",
-  whiteSpace: "nowrap",
-};
 
 /**
  * Dense table of users. The whole row is the click target (opens the drawer);

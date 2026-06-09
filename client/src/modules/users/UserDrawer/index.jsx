@@ -15,51 +15,14 @@ import {
 import { AlertCircle, Check, Clock, MapPin, Trash2 } from "lucide-react";
 
 import { Avatar, GeoMap } from "@base/index";
+import { ZIP_FORMAT } from "@modules/users/constants";
+import { DataRow } from "@modules/users/UserDrawer/DataRow";
 import { useUsersContext } from "@modules/users/context";
-import { cityState, localTime, tzChip, tzFull } from "@modules/users/format";
+import { cityState, localTime, tzChip, tzFull } from "@/modules/users/utils";
 
 /**
  * @typedef {import('@lib/api/types').User} User
  */
-
-const ZIP_FORMAT = /^\d{5}$/;
-
-/**
- * @param {object} props
- * @param {string} props.label
- * @param {React.ReactNode} props.children
- * @param {boolean} [props.mono]
- * @returns {JSX.Element}
- */
-function DataRow({ label, children, mono }) {
-  return (
-    <Flex
-      align="center"
-      justify="space-between"
-      py="2.5"
-      borderBottomWidth="1px"
-      borderColor="border.subtle"
-    >
-      <Text
-        fontSize="12.5px"
-        color="fg.subtle"
-        fontWeight="600"
-        textTransform="uppercase"
-        letterSpacing="0.04em"
-      >
-        {label}
-      </Text>
-      <Text
-        fontFamily={mono ? "mono" : undefined}
-        fontSize="13.5px"
-        fontWeight={mono ? "500" : "600"}
-        textAlign="right"
-      >
-        {children}
-      </Text>
-    </Flex>
-  );
-}
 
 /**
  * Right slide-in detail/edit pane for one user. Shows the stylized map, local

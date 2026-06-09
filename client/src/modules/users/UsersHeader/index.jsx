@@ -2,12 +2,8 @@ import { Box, Button, Flex, Heading, Input, InputGroup, Stack, Text } from "@cha
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 
 import { SegmentedToggle } from "@base/index";
+import { LAYOUT_OPTIONS } from "@modules/users/UsersHeader/constants";
 import { useUsersContext } from "@modules/users/context";
-
-const LAYOUT_OPTIONS = [
-  { value: "table", label: "Table" },
-  { value: "cards", label: "Cards" },
-];
 
 /**
  * The list header: title + a "{n} people · {m} cities · enriched from zip"

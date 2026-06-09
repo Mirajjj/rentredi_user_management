@@ -5,64 +5,17 @@ import { useAPIUsers } from "@lib/api/queries/use-api-users";
 import { useAPICreateUser } from "@lib/api/queries/use-api-create-user";
 import { useAPIUpdateUser } from "@lib/api/queries/use-api-update-user";
 import { useAPIDeleteUser } from "@lib/api/queries/use-api-delete-user";
-import { cityState, tzChip } from "@modules/users/format";
+import { cityState } from "@/modules/users/utils";
+import { filterUsers } from "@modules/users/context/utils";
 
 /**
  * @typedef {import('@lib/api/types').User} User
  * @typedef {import('@lib/api/types').UserInput} UserInput
- */
-
-/**
- * Everything the users feature shares. UI state (search, layout, the selected
- * user, the add-modal) and server state (the list + the create/save/delete
- * actions, which own their toasts and selection side-effects) live here, so the
- * feature's components read what they need instead of receiving it through props.
- * Genuinely local state — a form's draft fields, a dialog's phase — stays in the
- * component that owns it.
- * @typedef {object} UsersContextValue
- * @property {string} searchQuery
- * @property {(value: string) => void} setSearchQuery
- * @property {'table' | 'cards'} areaLayout
- * @property {(layout: 'table' | 'cards') => void} setAreaLayout
- * @property {User[]} users               the full list
- * @property {User[]} filtered            the list after the search filter
- * @property {number} count               total users
- * @property {number} cityCount           distinct city/state pairs
- * @property {boolean} isPending
- * @property {boolean} isError
- * @property {Error | null} error
- * @property {User | null} selected       the user shown in the drawer
- * @property {(user: User) => void} select
- * @property {() => void} clearSelected
- * @property {boolean} modalOpen
- * @property {() => void} openModal
- * @property {() => void} closeModal
- * @property {(input: UserInput) => Promise<User>} createUser   toasts on success; throws on failure
- * @property {boolean} creating
- * @property {(id: string, fields: Partial<UserInput>) => Promise<User>} saveUser   toasts + updates selection; throws on failure
- * @property {boolean} saving
- * @property {(user: User) => Promise<void>} deleteUser   toasts + clears selection; throws on failure
- * @property {boolean} deleting
+ * @typedef {import('@modules/users/context/types').UsersContextValue} UsersContextValue
  */
 
 /** @type {import('react').Context<UsersContextValue | null>} */
 const UsersContext = createContext(null);
-
-/**
- * Case-insensitive substring filter over the fields a user would search by.
- * @param {User[]} users
- * @param {string} query
- * @returns {User[]}
- */
-function filterUsers(users, query) {
-  const q = query.trim().toLowerCase();
-  if (!q) return users;
-  return users.filter((u) =>
-    [u.name, u.city, u.state, u.zipCode, cityState(u), tzChip(u.timezone)]
-      .filter(Boolean)
-      .some((field) => field.toLowerCase().includes(q)),
-  );
-}
 
 /**
  * Provides {@link UsersContextValue} to the users feature. Wrap the page region

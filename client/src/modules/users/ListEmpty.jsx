@@ -1,5 +1,6 @@
 import { Box, Button, Heading, Stack, Text } from "@chakra-ui/react";
 import { Plus, Search, Users } from "lucide-react";
+
 import { useUsersContext } from "@modules/users/context";
 
 /**

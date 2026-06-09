@@ -1,37 +1,13 @@
 import { Badge, Box, Flex, Grid, Stack, Text } from "@chakra-ui/react";
 
 import { Avatar } from "@base/index";
+import { Stat } from "@modules/users/UserCards/UserCard/Stat";
 import { useUsersContext } from "@modules/users/context";
-import { cityState, tzChip } from "@modules/users/format";
+import { cityState, tzChip } from "@modules/users/utils";
 
 /**
  * @typedef {import('@lib/api/types').User} User
  */
-
-/**
- * @param {object} props
- * @param {string} props.label
- * @param {string} props.value
- * @returns {JSX.Element}
- */
-function Stat({ label, value }) {
-  return (
-    <Box bg="bg.subtle" px="2.5" py="2">
-      <Text
-        fontSize="10.5px"
-        textTransform="uppercase"
-        letterSpacing="0.05em"
-        color="fg.subtle"
-        fontWeight="600"
-      >
-        {label}
-      </Text>
-      <Text fontFamily="mono" fontSize="12.5px" color="fg" mt="0.5">
-        {value}
-      </Text>
-    </Box>
-  );
-}
 
 /**
  * A single user as a card: avatar + name + location + tz chip, and a 2-up

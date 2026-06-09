@@ -8,7 +8,7 @@ import { UserTable } from "@modules/users/UserTable";
 import { useUsersContext } from "@modules/users/context";
 
 export { UsersContextProvider } from "@modules/users/context";
-export { AddUserModal } from "@modules/users/AddUserModal";
+export { AddUserModal } from "@modules/users/modals/AddUserModal";
 export { UserDrawer } from "@modules/users/UserDrawer";
 
 /**

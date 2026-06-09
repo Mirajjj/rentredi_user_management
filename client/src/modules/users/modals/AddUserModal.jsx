@@ -17,14 +17,13 @@ import {
 import { AlertCircle, CheckCircle2, Globe, MapPin } from "lucide-react";
 
 import { Avatar, toaster } from "@base/index";
+import { ZIP_FORMAT } from "@modules/users/constants";
 import { useUsersContext } from "@modules/users/context";
-import { cityState, tzFull } from "@modules/users/format";
+import { cityState, tzFull } from "@/modules/users/utils";
 
 /**
  * @typedef {import('@lib/api/types').User} User
  */
-
-const ZIP_FORMAT = /^\d{5}$/;
 
 /**
  * Create-user dialog driving its own phases off the create mutation:

@@ -1,6 +1,6 @@
 import { Grid } from "@chakra-ui/react";
 
-import { UserCard } from "@modules/users/UserCard";
+import { UserCard } from "@modules/users/UserCards/UserCard";
 import { useUsersContext } from "@modules/users/context";
 
 /**
