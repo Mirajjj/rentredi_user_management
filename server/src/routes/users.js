@@ -1,8 +1,12 @@
 import { Router } from "express";
-import { createUserSchema, updateUserSchema } from "../schemas/user.js";
+import {
+  createUserSchema,
+  updateUserSchema,
+  userResponseSchema,
+} from "../schemas/routes/user-schema.js";
 import { geocodeZip } from "../services/geo.js";
 import { HttpError } from "../middleware/errors.js";
-import * as store from "../store/users.js";
+import { db } from "../db/index.js";
 
 /**
  * Wrap an async route handler so rejected promises reach the error middleware.
@@ -22,8 +26,8 @@ router.post(
   asyncHandler(async (req, res) => {
     const { name, zipCode } = createUserSchema.parse(req.body);
     const geo = await geocodeZip(zipCode);
-    const user = await store.create({ name, zipCode, ...geo });
-    res.status(201).json(user);
+    const user = await db.users.create({ name, zipCode, ...geo });
+    res.status(201).json(userResponseSchema.parse(user));
   }),
 );
 
@@ -31,7 +35,7 @@ router.post(
 router.get(
   "/",
   asyncHandler(async (_req, res) => {
-    res.json(await store.list());
+    res.json(userResponseSchema.array().parse(await db.users.list()));
   }),
 );
 
@@ -39,9 +43,9 @@ router.get(
 router.get(
   "/:id",
   asyncHandler(async (req, res) => {
-    const user = await store.get(req.params.id);
+    const user = await db.users.get(req.params.id);
     if (!user) throw new HttpError(404, "Not found");
-    res.json(user);
+    res.json(userResponseSchema.parse(user));
   }),
 );
 
@@ -51,7 +55,7 @@ router.put(
   asyncHandler(async (req, res) => {
     const changes = updateUserSchema.parse(req.body);
 
-    const existing = await store.get(req.params.id);
+    const existing = await db.users.get(req.params.id);
     if (!existing) throw new HttpError(404, "Not found");
 
     const fields = { ...changes };
@@ -59,8 +63,8 @@ router.put(
       Object.assign(fields, await geocodeZip(changes.zipCode));
     }
 
-    const user = await store.update(req.params.id, fields);
-    res.json(user);
+    const user = await db.users.update(req.params.id, fields);
+    res.json(userResponseSchema.parse(user));
   }),
 );
 
@@ -68,7 +72,7 @@ router.put(
 router.delete(
   "/:id",
   asyncHandler(async (req, res) => {
-    const deleted = await store.remove(req.params.id);
+    const deleted = await db.users.remove(req.params.id);
     if (!deleted) throw new HttpError(404, "Not found");
     res.status(204).end();
   }),

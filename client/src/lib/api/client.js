@@ -2,9 +2,8 @@ import axios from "axios";
 
 /**
  * Create and configure the Axios instance the API client runs on. Kept separate
- * from the endpoint definitions (the reference's split between instance creation
- * and `requests(client)`) so the same endpoints can be bound to a different
- * instance — e.g. a mock in a future test.
+ * from the endpoint definitions so the same endpoints can be bound to a
+ * different instance — e.g. a mock in a future test.
  * @returns {import('axios').AxiosInstance}
  */
 export const createHttp = () => {

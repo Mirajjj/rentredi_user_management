@@ -43,5 +43,5 @@ const app = admin.initializeApp({
   databaseURL: FIREBASE_DATABASE_URL,
 });
 
-export const db = app.database();
+export const rtdb = app.database();
 export { admin };

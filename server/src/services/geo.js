@@ -1,5 +1,5 @@
 import zipcodes from "zipcodes";
-import { openWeatherResponseSchema } from "../schemas/user.js";
+import { openWeatherResponseSchema } from "../schemas/geo-schema.js";
 import { HttpError } from "../middleware/errors.js";
 
 const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
@@ -8,12 +8,12 @@ const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
  * Derive geo fields from a US zip code. `latitude`/`longitude`/`timezone` come
  * from the OpenWeather current-weather endpoint (used rather than the geo/zip
  * lookup because it returns `coord` *and* `timezone` in a single call;
- * `timezone` is a UTC offset in seconds, stored verbatim per the assignment).
+ * `timezone` is a UTC offset in seconds, stored verbatim as returned).
  * `city`/`state` come from the offline `zipcodes` table — no extra network call
  * and canonical for the zip — with OpenWeather's `name` as a fallback city.
  *
  * @param {string} zipCode - 5-digit US zip (already validated upstream).
- * @returns {Promise<import("../schemas/user.js").Geo>} `{ latitude, longitude, timezone, city, state }`
+ * @returns {Promise<import("../schemas/geo-schema.js").Geo>} `{ latitude, longitude, timezone, city, state }`
  */
 export async function geocodeZip(zipCode) {
   const apiKey = process.env.ZIP_API_KEY;

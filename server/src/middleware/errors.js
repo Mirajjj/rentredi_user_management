@@ -18,9 +18,9 @@ export class HttpError extends Error {
 }
 
 /**
- * Centralized Express error handler. Maps known error types to the response
- * shapes documented in the API surface; logs the full stack for unexpected
- * errors so they're debuggable without leaking internals to the client.
+ * Centralized Express error handler. Maps known error types to consistent
+ * response shapes; logs the full stack for unexpected errors so they're
+ * debuggable without leaking internals to the client.
  *
  * @type {import("express").ErrorRequestHandler}
  */

@@ -1,10 +1,10 @@
-import { db, admin } from "../firebase.js";
+import { rtdb, admin } from "../firebase.js";
 
 /**
  * User data layer backed by Firebase Realtime Database (`/users/{id}`).
  *
- * Same async contract as the original Phase 2 store, so routes/services are
- * unchanged:
+ * Storage-agnostic async contract, so routes/services don't depend on the
+ * backing store:
  *   create(fields) -> User          // assigns id + timestamps
  *   list()         -> User[]        // sorted by createdAt desc
  *   get(id)        -> User | null
@@ -17,19 +17,19 @@ import { db, admin } from "../firebase.js";
  * the unresolved `{".sv":"timestamp"}` placeholder.
  */
 
-const usersRef = db.ref("users");
+const usersRef = rtdb.ref("users");
 const TIMESTAMP = admin.database.ServerValue.TIMESTAMP;
 
 /**
  * @param {string} id
  * @param {Record<string, unknown>} value
- * @returns {import("../schemas/user.js").User}
+ * @returns {import("../schemas/db/user-schema.js").User}
  */
 const toUser = (id, value) => ({ id, ...value });
 
 /**
  * @param {{ name: string, zipCode: string, latitude: number, longitude: number, timezone: number }} fields
- * @returns {Promise<import("../schemas/user.js").User>}
+ * @returns {Promise<import("../schemas/db/user-schema.js").User>}
  */
 export async function create(fields) {
   const ref = usersRef.push();
@@ -38,10 +38,10 @@ export async function create(fields) {
   return toUser(ref.key, snap.val());
 }
 
-/** @returns {Promise<import("../schemas/user.js").User[]>} */
+/** @returns {Promise<import("../schemas/db/user-schema.js").User[]>} */
 export async function list() {
   const snap = await usersRef.orderByChild("createdAt").get();
-  /** @type {import("../schemas/user.js").User[]} */
+  /** @type {import("../schemas/db/user-schema.js").User[]} */
   const users = [];
   snap.forEach((child) => {
     users.push(toUser(child.key, child.val()));
@@ -52,7 +52,7 @@ export async function list() {
 
 /**
  * @param {string} id
- * @returns {Promise<import("../schemas/user.js").User | null>}
+ * @returns {Promise<import("../schemas/db/user-schema.js").User | null>}
  */
 export async function get(id) {
   const snap = await usersRef.child(id).get();
@@ -62,7 +62,7 @@ export async function get(id) {
 /**
  * @param {string} id
  * @param {Partial<{ name: string, zipCode: string, latitude: number, longitude: number, timezone: number }>} fields
- * @returns {Promise<import("../schemas/user.js").User | null>}
+ * @returns {Promise<import("../schemas/db/user-schema.js").User | null>}
  */
 export async function update(id, fields) {
   const ref = usersRef.child(id);
