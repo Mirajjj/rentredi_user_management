@@ -14,7 +14,7 @@ export function filterUsers(users, query) {
   const q = query.trim().toLowerCase();
   if (!q) return users;
   return users.filter((u) =>
-    [u.name, u.city, u.state, u.zipCode, cityState(u), tzChip(u.timezone)]
+    [u.name, u.city, u.state, u.zipCode, cityState(u), tzChip(u)]
       .filter(Boolean)
       .some((field) => field.toLowerCase().includes(q))
   );

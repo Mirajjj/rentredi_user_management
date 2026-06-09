@@ -58,7 +58,7 @@ export function UserCard({ user }) {
           px="2"
         >
           <Text fontFamily="mono" fontSize="11.5px">
-            {tzChip(user.timezone)}
+            {tzChip(user)}
           </Text>
         </Badge>
       </Flex>

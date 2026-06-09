@@ -128,7 +128,7 @@ export function UserDrawer() {
                     <Clock size={14} strokeWidth={2} />
                     Local time
                     <Text as="span" fontFamily="mono" color="fg.muted">
-                      {localTime(user.timezone)}
+                      {localTime(user)}
                     </Text>
                     <Badge
                       ml="auto"
@@ -138,7 +138,7 @@ export function UserDrawer() {
                       px="2"
                     >
                       <Text fontFamily="mono" fontSize="11.5px">
-                        {tzChip(user.timezone)}
+                        {tzChip(user)}
                       </Text>
                     </Badge>
                   </Flex>
@@ -214,7 +214,7 @@ export function UserDrawer() {
                   </Text>
                   <DataRow label="City">{cityState(user)}</DataRow>
                   <DataRow label="Timezone" mono>
-                    {tzFull(user.timezone)}
+                    {tzFull(user)}
                   </DataRow>
                   <DataRow label="Latitude" mono>
                     {user.latitude.toFixed(6)}

@@ -293,7 +293,7 @@ export function AddUserModal() {
                   >
                     {[
                       ["City", cityState(created), false],
-                      ["Timezone", tzFull(created.timezone), true],
+                      ["Timezone", tzFull(created), true],
                       ["Latitude", created.latitude.toFixed(4), true],
                       ["Longitude", created.longitude.toFixed(4), true],
                     ].map(([k, v, mono], i) => (

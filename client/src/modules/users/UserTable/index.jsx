@@ -73,7 +73,7 @@ export function UserTable() {
                 >
                   <Clock size={12} strokeWidth={2.2} />
                   <Text fontFamily="mono" fontSize="11.5px">
-                    {tzChip(u.timezone)}
+                    {tzChip(u)}
                   </Text>
                 </Badge>
               </Table.Cell>
