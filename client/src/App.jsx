@@ -1,18 +1,24 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Container, Heading, Stack, Text } from "@chakra-ui/react";
+
+import { UsersPage } from "@pages/UsersPage";
 
 /**
- * Top-level application component.
- * Phase 1 renders a placeholder; the CRUD UI arrives in Phase 3.
- *
+ * Top-level page: a header above the user-management feature.
  * @returns {JSX.Element}
  */
-export default function App() {
+export function App() {
   return (
-    <Box maxW="2xl" mx="auto" p={8}>
-      <Heading size="lg">RentRedi User Management</Heading>
-      <Text mt={2} color="gray.600">
-        Client scaffold is running. The user CRUD interface arrives in Phase 3.
-      </Text>
-    </Box>
+    <Container maxW="2xl" py={10}>
+      <Stack gap={8}>
+        <Box>
+          <Heading size="xl">RentRedi User Management</Heading>
+          <Text mt={1} color="fg.muted">
+            Add users by name and zip — location and timezone are derived
+            automatically.
+          </Text>
+        </Box>
+        <UsersPage />
+      </Stack>
+    </Container>
   );
 }
