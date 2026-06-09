@@ -1,11 +1,11 @@
 import { Flex } from "@chakra-ui/react";
 
 import { AppToaster, Sidebar } from "@base/index";
-import { UsersPage } from "@pages/UsersPage";
+import { AppRoutes } from "@/router";
 
 /**
- * App shell: a fixed sidebar beside the user-management page, with the toast
- * portal mounted once at the root.
+ * App shell: a fixed sidebar beside the routed, code-split main area, with the
+ * toast portal mounted once at the root.
  * @returns {JSX.Element}
  */
 export function App() {
@@ -13,7 +13,7 @@ export function App() {
     <>
       <Flex height="100%" bg="bg.canvas">
         <Sidebar />
-        <UsersPage />
+        <AppRoutes />
       </Flex>
       <AppToaster />
     </>

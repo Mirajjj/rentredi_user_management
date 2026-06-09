@@ -2,6 +2,7 @@ import { Badge, Box, Flex, Stack, Table, Text } from "@chakra-ui/react";
 import { ChevronRight, Clock, Compass } from "lucide-react";
 
 import { Avatar } from "@base/index";
+import { useUsersContext } from "@modules/users/context";
 import { cityState, tzChip } from "@modules/users/format";
 
 /**
@@ -23,13 +24,10 @@ const HEAD = {
 /**
  * Dense table of users. The whole row is the click target (opens the drawer);
  * the selected row keeps a brand-tinted background.
- * @param {object} props
- * @param {User[]} props.users
- * @param {(user: User) => void} props.onSelect
- * @param {string} [props.selectedId]
  * @returns {JSX.Element}
  */
-export function UserTable({ users, onSelect, selectedId }) {
+export function UserTable() {
+  const { filtered, select, selected } = useUsersContext();
   return (
     <Table.Root size="md" fontSize="14px">
       <Table.Header>
@@ -45,15 +43,15 @@ export function UserTable({ users, onSelect, selectedId }) {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {users.map((u) => {
-          const selected = u.id === selectedId;
+        {filtered.map((u) => {
+          const isSelected = u.id === selected?.id;
           return (
             <Table.Row
               key={u.id}
-              onClick={() => onSelect(u)}
+              onClick={() => select(u)}
               cursor="pointer"
-              bg={selected ? "brand.subtle" : "transparent"}
-              _hover={{ bg: selected ? "brand.subtle" : "bg.subtle" }}
+              bg={isSelected ? "brand.subtle" : "transparent"}
+              _hover={{ bg: isSelected ? "brand.subtle" : "bg.subtle" }}
             >
               <Table.Cell pl="6">
                 <Flex align="center" gap="3">

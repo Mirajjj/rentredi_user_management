@@ -1,5 +1,6 @@
 import { Box, Button, Heading, Stack, Text } from "@chakra-ui/react";
 import { Plus, Search, Users } from "lucide-react";
+import { useUsersContext } from "@modules/users/context";
 
 /**
  * Empty / no-results state for the list region.
@@ -7,12 +8,11 @@ import { Plus, Search, Users } from "lucide-react";
  *  - `no-results`: a search miss — search glyph + "Clear search".
  * @param {object} props
  * @param {'empty' | 'no-results'} props.kind
- * @param {string} [props.query]      the active search (no-results only)
- * @param {() => void} [props.onAdd]
- * @param {() => void} [props.onClear]
  * @returns {JSX.Element}
  */
-export function ListEmpty({ kind, query, onAdd, onClear }) {
+export function ListEmpty({ kind }) {
+  const { searchQuery, setSearchQuery, openModal } = useUsersContext();
+
   if (kind === "no-results") {
     return (
       <Stack align="center" textAlign="center" px="6" py="20" gap="0">
@@ -29,12 +29,12 @@ export function ListEmpty({ kind, query, onAdd, onClear }) {
           <Search size={22} />
         </Box>
         <Heading size="md" mt="4.5" mb="1.5" letterSpacing="-0.02em">
-          No users match “{query}”
+          No users match “{searchQuery}”
         </Heading>
         <Text fontSize="14px" color="fg.muted" mb="4.5">
           Try a different name, city, or zip code.
         </Text>
-        <Button variant="outline" onClick={onClear}>
+        <Button variant="outline" onClick={() => setSearchQuery("")}>
           Clear search
         </Button>
       </Stack>
@@ -63,7 +63,7 @@ export function ListEmpty({ kind, query, onAdd, onClear }) {
           Enter a name and a zip code. We’ll resolve the city, timezone, and coordinates
           automatically.
         </Text>
-        <Button size="lg" colorPalette="brand" onClick={onAdd}>
+        <Button size="lg" colorPalette="brand" onClick={openModal}>
           <Plus size={17} /> Add a user
         </Button>
       </Stack>

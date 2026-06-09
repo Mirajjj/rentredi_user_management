@@ -14,9 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { AlertCircle, Check, Clock, MapPin, Trash2 } from "lucide-react";
 
-import { Avatar, GeoMap, toaster } from "@base/index";
-import { useAPIDeleteUser } from "@lib/api/queries/use-api-delete-user";
-import { useAPIUpdateUser } from "@lib/api/queries/use-api-update-user";
+import { Avatar, GeoMap } from "@base/index";
+import { useUsersContext } from "@modules/users/context";
 import { cityState, localTime, tzChip, tzFull } from "@modules/users/format";
 
 /**
@@ -66,17 +65,14 @@ function DataRow({ label, children, mono }) {
  * Right slide-in detail/edit pane for one user. Shows the stylized map, local
  * time, editable name/zip, the read-only "enriched from zip" rows, an inline
  * delete confirm, and Save (enabled only when dirty + valid). Server re-derives
- * geo only when the zip changes; the resolved record flows back via `onSaved`.
- * @param {object} props
- * @param {User | null} props.user           the selected user, or null when closed
- * @param {(open: boolean) => void} props.onOpenChange
- * @param {(user: User) => void} props.onSaved
- * @param {(user: User) => void} props.onDeleted
+ * geo only when the zip changes. Reads the selected user and the save/delete
+ * actions from the users context.
  * @returns {JSX.Element}
  */
-export function UserDrawer({ user, onOpenChange, onSaved, onDeleted }) {
-  const updateUser = useAPIUpdateUser();
-  const deleteUser = useAPIDeleteUser();
+export function UserDrawer() {
+  const { selected, clearSelected, saveUser, saving, deleteUser, deleting } =
+    useUsersContext();
+  const user = selected;
   const [name, setName] = useState("");
   const [zip, setZip] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -103,38 +99,27 @@ export function UserDrawer({ user, onOpenChange, onSaved, onDeleted }) {
     if (!canSave || !user) return;
     const fields = { name: name.trim(), zipCode: zip };
     try {
-      const updated = await updateUser.mutateAsync({ id: user.id, fields });
-      onSaved(updated);
+      await saveUser(user.id, fields);
       setJustSaved(true);
       setTimeout(() => setJustSaved(false), 1600);
-    } catch (err) {
-      // keep the drawer open for a retry; surface why it failed.
-      toaster.create({
-        type: "error",
-        title: "Couldn’t save changes",
-        description: err?.message || "Please try again.",
-      });
+    } catch {
+      // the context action already surfaced the error
     }
   }
 
-  function remove() {
+  async function remove() {
     if (!user) return;
-    const target = user;
-    deleteUser.mutate(target.id, {
-      onSuccess: () => onDeleted(target),
-      onError: (err) =>
-        toaster.create({
-          type: "error",
-          title: "Couldn’t delete user",
-          description: err?.message || "Please try again.",
-        }),
-    });
+    try {
+      await deleteUser(user);
+    } catch {
+      // the context action already surfaced the error
+    }
   }
 
   return (
     <Drawer.Root
       open={open}
-      onOpenChange={(e) => onOpenChange(e.open)}
+      onOpenChange={(e) => !e.open && clearSelected()}
       placement="end"
       size="sm"
     >
@@ -303,7 +288,7 @@ export function UserDrawer({ user, onOpenChange, onSaved, onDeleted }) {
                       <Button
                         size="sm"
                         colorPalette="red"
-                        loading={deleteUser.isPending}
+                        loading={deleting}
                         onClick={remove}
                       >
                         Delete
@@ -328,7 +313,7 @@ export function UserDrawer({ user, onOpenChange, onSaved, onDeleted }) {
                         <Button
                           colorPalette="brand"
                           disabled={!canSave}
-                          loading={updateUser.isPending}
+                          loading={saving}
                           onClick={save}
                         >
                           Save changes

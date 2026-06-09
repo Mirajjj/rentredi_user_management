@@ -17,7 +17,7 @@ import {
 import { AlertCircle, CheckCircle2, Globe, MapPin } from "lucide-react";
 
 import { Avatar, toaster } from "@base/index";
-import { useAPICreateUser } from "@lib/api/queries/use-api-create-user";
+import { useUsersContext } from "@modules/users/context";
 import { cityState, tzFull } from "@modules/users/format";
 
 /**
@@ -32,14 +32,10 @@ const ZIP_FORMAT = /^\d{5}$/;
  * validated live (5 digits); the real city/state/lat/lon/tz resolve on submit.
  * A 400 (bad zip) returns to the form with a field error; a 5xx/network failure
  * shows the error phase with "Try again".
- * @param {object} props
- * @param {boolean} props.open
- * @param {(open: boolean) => void} props.onOpenChange
- * @param {(user: User) => void} props.onCreated  fired once on a resolved create
  * @returns {JSX.Element}
  */
-export function AddUserModal({ open, onOpenChange, onCreated }) {
-  const createUser = useAPICreateUser();
+export function AddUserModal() {
+  const { modalOpen, closeModal, createUser } = useUsersContext();
   const [phase, setPhase] = useState(/** @type {'form'|'loading'|'success'|'error'} */ ("form"));
   const [name, setName] = useState("");
   const [zip, setZip] = useState("");
@@ -49,7 +45,7 @@ export function AddUserModal({ open, onOpenChange, onCreated }) {
   const nameRef = useRef(/** @type {HTMLInputElement | null} */ (null));
 
   useEffect(() => {
-    if (!open) {
+    if (!modalOpen) {
       setPhase("form");
       setName("");
       setZip("");
@@ -57,7 +53,7 @@ export function AddUserModal({ open, onOpenChange, onCreated }) {
       setZipError("");
       setCreated(null);
     }
-  }, [open]);
+  }, [modalOpen]);
 
   function close() {
     if (phase === "error") {
@@ -69,7 +65,7 @@ export function AddUserModal({ open, onOpenChange, onCreated }) {
         duration: 9000,
       });
     }
-    onOpenChange(false);
+    closeModal();
   }
 
   const nameInvalid = touched && name.trim().length <= 1;
@@ -84,10 +80,9 @@ export function AddUserModal({ open, onOpenChange, onCreated }) {
     setZipError("");
     setPhase("loading");
     try {
-      const user = await createUser.mutateAsync({ name: name.trim(), zipCode: zip });
+      const user = await createUser({ name: name.trim(), zipCode: zip });
       setCreated(user);
       setPhase("success");
-      onCreated(user);
     } catch (err) {
       if (err?.status === 400) {
         setZipError(err.message || "Couldn’t find that zip code.");
@@ -100,7 +95,7 @@ export function AddUserModal({ open, onOpenChange, onCreated }) {
 
   return (
     <Dialog.Root
-      open={open}
+      open={modalOpen}
       onOpenChange={(e) => !e.open && close()}
       placement="center"
       initialFocusEl={() => nameRef.current}
@@ -304,7 +299,7 @@ export function AddUserModal({ open, onOpenChange, onCreated }) {
                       ["Longitude", created.longitude.toFixed(4), true],
                     ].map(([k, v, mono], i) => (
                       <Flex
-                        key={k}
+                        key={k.toString()}
                         justify="space-between"
                         align="center"
                         px="3.5"

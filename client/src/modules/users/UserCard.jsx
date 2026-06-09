@@ -1,6 +1,7 @@
 import { Badge, Box, Flex, Grid, Stack, Text } from "@chakra-ui/react";
 
 import { Avatar } from "@base/index";
+import { useUsersContext } from "@modules/users/context";
 import { cityState, tzChip } from "@modules/users/format";
 
 /**
@@ -37,24 +38,27 @@ function Stat({ label, value }) {
  * stat grid (zip, coordinates). The whole card opens the drawer.
  * @param {object} props
  * @param {User} props.user
- * @param {(user: User) => void} props.onSelect
- * @param {boolean} [props.selected]
  * @returns {JSX.Element}
  */
-export function UserCard({ user, onSelect, selected }) {
+export function UserCard({ user }) {
+  const { select, selected } = useUsersContext();
+  const isSelected = selected?.id === user.id;
+
   return (
     <Box
-      onClick={() => onSelect(user)}
+      onClick={() => select(user)}
       cursor="pointer"
       bg="bg.panel"
       borderWidth="1px"
       borderColor="border.subtle"
       borderRadius="lg"
       p="4"
-      boxShadow={selected ? "0 0 0 2px var(--chakra-colors-brand-solid)" : "xs"}
+      boxShadow={
+        isSelected ? "0 0 0 2px var(--chakra-colors-brand-solid)" : "xs"
+      }
       transition="box-shadow .14s, transform .06s"
       _hover={{
-        boxShadow: selected
+        boxShadow: isSelected
           ? "0 0 0 2px var(--chakra-colors-brand-solid)"
           : "md",
         transform: "translateY(-1px)",

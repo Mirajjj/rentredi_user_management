@@ -2,6 +2,7 @@ import { Box, Button, Flex, Heading, Input, InputGroup, Stack, Text } from "@cha
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 
 import { SegmentedToggle } from "@base/index";
+import { useUsersContext } from "@modules/users/context";
 
 const LAYOUT_OPTIONS = [
   { value: "table", label: "Table" },
@@ -12,17 +13,18 @@ const LAYOUT_OPTIONS = [
  * The list header: title + a "{n} people · {m} cities · enriched from zip"
  * subtitle, the Add-user button, the search input, a visual-only Filter
  * button, and the Table/Cards layout toggle.
- * @param {object} props
- * @param {number} props.count   total users
- * @param {number} props.cities  distinct city/state pairs
- * @param {string} props.query
- * @param {(value: string) => void} props.onQuery
- * @param {() => void} props.onAdd
- * @param {'table' | 'cards'} props.layout
- * @param {(layout: string) => void} props.onLayout
  * @returns {JSX.Element}
  */
-export function UsersHeader({ count, cities, query, onQuery, onAdd, layout, onLayout }) {
+export function UsersHeader() {
+  const {
+    count,
+    cityCount,
+    searchQuery,
+    setSearchQuery,
+    openModal,
+    areaLayout,
+    setAreaLayout,
+  } = useUsersContext();
   return (
     <Box px="7" pt="5" pb="4" borderBottomWidth="1px" borderColor="border.subtle" bg="bg.panel">
       <Flex align="flex-start" justify="space-between" gap="4">
@@ -31,11 +33,11 @@ export function UsersHeader({ count, cities, query, onQuery, onAdd, layout, onLa
             Users
           </Heading>
           <Text fontSize="13.5px" color="fg.subtle">
-            {count} {count === 1 ? "person" : "people"} · {cities}{" "}
-            {cities === 1 ? "city" : "cities"} · enriched from zip
+            {count} {count === 1 ? "person" : "people"} · {cityCount}{" "}
+            {cityCount === 1 ? "city" : "cities"} · enriched from zip
           </Text>
         </Stack>
-        <Button colorPalette="brand" onClick={onAdd}>
+        <Button colorPalette="brand" onClick={openModal}>
           <Plus size={16} /> Add user
         </Button>
       </Flex>
@@ -44,8 +46,8 @@ export function UsersHeader({ count, cities, query, onQuery, onAdd, layout, onLa
         <InputGroup flex="1" maxW="360px" startElement={<Search size={15} />}>
           <Input
             placeholder="Search name, city, or zip…"
-            value={query}
-            onChange={(e) => onQuery(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             height="38px"
             bg="bg.panel"
           />
@@ -56,8 +58,8 @@ export function UsersHeader({ count, cities, query, onQuery, onAdd, layout, onLa
         <Box ml="auto">
           <SegmentedToggle
             options={LAYOUT_OPTIONS}
-            value={layout}
-            onChange={onLayout}
+            value={areaLayout}
+            onChange={setAreaLayout}
             ariaLabel="List layout"
           />
         </Box>
