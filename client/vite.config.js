@@ -7,5 +7,8 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
+    // CodeSandbox serves the preview from a random *.csb.app subdomain; Vite's
+    // host check blocks unknown hosts, so allow the whole domain.
+    allowedHosts: [".csb.app"],
   },
 });
