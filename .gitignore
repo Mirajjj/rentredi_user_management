@@ -13,6 +13,7 @@ dist
 # these stay out of the repo the reviewer sees.
 *.md
 plans/
+design/
 
 #deliverable docs, which are tracked.
 !README.md

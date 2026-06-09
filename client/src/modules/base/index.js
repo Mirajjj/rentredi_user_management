@@ -1,3 +1,10 @@
 export { Field } from "@base/Field";
 export { EmptyState } from "@base/EmptyState";
 export { ConfirmButton } from "@base/ConfirmButton";
+export { Logo } from "@base/Logo";
+export { Avatar } from "@base/Avatar";
+export { GeoMap } from "@base/GeoMap";
+export { Sidebar } from "@base/Sidebar";
+export { SegmentedToggle } from "@base/SegmentedToggle";
+export { AppToaster } from "@base/AppToaster";
+export { toaster } from "@base/toaster";

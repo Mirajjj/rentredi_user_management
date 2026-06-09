@@ -1,56 +1,79 @@
 import { useState } from "react";
-import { Card, Heading, Stack } from "@chakra-ui/react";
 
-import { useAPICreateUser } from "@lib/api/queries/use-api-create-user";
-import { useAPIUpdateUser } from "@lib/api/queries/use-api-update-user";
-import { UserForm, UserList } from "@modules/users";
+import { toaster } from "@base/index";
+import { AddUserModal, UserDrawer, UserList } from "@modules/users";
+import { cityState } from "@modules/users/format";
 
 /**
- * The user-management page: a create/edit form above the list. Owns the
- * "currently editing" UI state and wires the create/update mutations; all
- * server state lives in the query hooks inside the users module.
+ * @typedef {import('@lib/api/types').User} User
+ */
+
+/**
+ * User-management page: the container. Owns the search query, list layout, the
+ * selected user (drawer), and the add-modal open state; composes the list with
+ * the create modal and the detail drawer, and fires toasts on mutation outcomes.
+ * Server state stays in the TanStack Query hooks inside the users module.
  * @returns {JSX.Element}
  */
 export function UsersPage() {
-  const [editing, setEditing] = useState(
-    /** @type {import('@lib/api/types').User | null} */ (null)
-  );
-  const createUser = useAPICreateUser();
-  const updateUser = useAPIUpdateUser();
+  const [query, setQuery] = useState("");
+  const [layout, setLayout] = useState(/** @type {'table' | 'cards'} */ ("table"));
+  const [selected, setSelected] = useState(/** @type {User | null} */ (null));
+  const [modalOpen, setModalOpen] = useState(false);
 
-  /** @param {import('@lib/api/types').UserInput} fields */
-  const handleSubmit = (fields) => {
-    if (editing) {
-      updateUser.mutate(
-        { id: editing.id, fields },
-        { onSuccess: () => setEditing(null) }
-      );
-    } else {
-      createUser.mutate(fields);
-    }
+  /** @param {User} user */
+  const handleCreated = (user) => {
+    toaster.create({
+      type: "success",
+      title: "User added",
+      description: `${user.name} · ${cityState(user)}`,
+    });
   };
 
-  const active = editing ? updateUser : createUser;
+  /** @param {User} user */
+  const handleSaved = (user) => {
+    setSelected(user);
+    toaster.create({
+      type: "success",
+      title: "Changes saved",
+      description: `${user.name}’s record was updated.`,
+    });
+  };
+
+  /** @param {User} user */
+  const handleDeleted = (user) => {
+    setSelected(null);
+    toaster.create({
+      type: "info",
+      title: "User deleted",
+      description: `${user.name} was removed.`,
+    });
+  };
 
   return (
-    <Stack gap={8}>
-      <Card.Root>
-        <Card.Header>
-          <Heading size="md">{editing ? "Edit user" : "Add a user"}</Heading>
-        </Card.Header>
-        <Card.Body>
-          <UserForm
-            key={editing?.id ?? "create"}
-            user={editing ?? undefined}
-            onSubmit={handleSubmit}
-            onCancel={editing ? () => setEditing(null) : undefined}
-            pending={active.isPending}
-            error={active.error ?? undefined}
-          />
-        </Card.Body>
-      </Card.Root>
+    <>
+      <UserList
+        query={query}
+        onQuery={setQuery}
+        layout={layout}
+        onLayout={(value) => setLayout(/** @type {'table' | 'cards'} */ (value))}
+        onAdd={() => setModalOpen(true)}
+        onSelect={setSelected}
+        selectedId={selected?.id}
+      />
 
-      <UserList onEdit={setEditing} />
-    </Stack>
+      <AddUserModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onCreated={handleCreated}
+      />
+
+      <UserDrawer
+        user={selected}
+        onOpenChange={(open) => !open && setSelected(null)}
+        onSaved={handleSaved}
+        onDeleted={handleDeleted}
+      />
+    </>
   );
 }

@@ -33,11 +33,16 @@ export const updateUserSchema = z
     message: "Provide at least one of: name, zipCode",
   });
 
-/** The geo fields derived from the zip code. */
+/**
+ * The geo fields derived from the zip code. `latitude`/`longitude`/`timezone`
+ * come from OpenWeather; `city`/`state` come from the offline zip table.
+ */
 export const geoSchema = z.object({
   latitude: z.number(),
   longitude: z.number(),
   timezone: z.number(), // UTC offset in seconds, as OpenWeather returns it
+  city: z.string(),
+  state: z.string(), // US state abbreviation, or "" when unknown for the zip
 });
 
 /** The persisted User record — the canonical shape stored and returned. */
@@ -62,6 +67,7 @@ export const openWeatherResponseSchema = z
       lon: z.number(),
     }),
     timezone: z.number(),
+    name: z.string(), // city name; fallback for `city` when the zip table misses
   })
   .passthrough();
 

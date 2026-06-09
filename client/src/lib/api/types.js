@@ -6,6 +6,8 @@
  * @property {string} id
  * @property {string} name
  * @property {string} zipCode      5-digit US zip
+ * @property {string} city         resolved city name
+ * @property {string} state        2-letter US state (may be empty)
  * @property {number} latitude
  * @property {number} longitude
  * @property {number} timezone     UTC offset in seconds (as OpenWeather returns)
