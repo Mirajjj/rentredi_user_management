@@ -9,11 +9,8 @@ dist
 .env
 *.env
 
-# internal working docs — planning notes and the brief (which holds the API key);
-# these stay out of the repo the reviewer sees.
-*.md
-plans/
+# design prototype reference — not part of the deliverable
 design/
 
-#deliverable docs, which are tracked.
-!README.md
+#vscode
+.vscode

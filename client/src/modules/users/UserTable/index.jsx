@@ -17,6 +17,7 @@ import { cityState, tzChip } from "@/modules/users/utils";
  */
 export function UserTable() {
   const { filtered, select, selected } = useUsersContext();
+
   return (
     <Table.Root size="md" fontSize="14px">
       <Table.Header>
@@ -64,13 +65,7 @@ export function UserTable() {
                 {cityState(u)}
               </Table.Cell>
               <Table.Cell>
-                <Badge
-                  bg="brand.subtle"
-                  color="brand.fg"
-                  borderRadius="full"
-                  px="2"
-                  gap="1"
-                >
+                <Badge bg="brand.subtle" color="brand.fg" borderRadius="full" px="2" gap="1">
                   <Clock size={12} strokeWidth={2.2} />
                   <Text fontFamily="mono" fontSize="11.5px">
                     {tzChip(u)}
@@ -90,12 +85,7 @@ export function UserTable() {
                   >
                     <Compass size={13} />
                   </Box>
-                  <Text
-                    fontFamily="mono"
-                    color="fg.muted"
-                    fontSize="12.5px"
-                    whiteSpace="nowrap"
-                  >
+                  <Text fontFamily="mono" color="fg.muted" fontSize="12.5px" whiteSpace="nowrap">
                     {u.latitude.toFixed(4)}, {u.longitude.toFixed(4)}
                   </Text>
                 </Flex>

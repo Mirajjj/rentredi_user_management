@@ -1,10 +1,5 @@
 import { Box, Text } from "@chakra-ui/react";
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  Marker,
-} from "react-simple-maps";
+import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 
 import usStates from "@/assets/us-states-10m.json";
 
